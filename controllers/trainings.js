@@ -17,7 +17,8 @@ exports.getTrainings = async (req, res, next) => {
 // @access Public
 exports.getTraining = async (req, res, next) => {
   try {
-    const training = await Training.findById(req.params.id);
+    console.log(req.params.id);
+    const training = await Training.findById("5d713995b721c3bb38c1f5d0");
     if (!training) {
       return res.status(400).json({ success: false, msg: "Not found" });
     }

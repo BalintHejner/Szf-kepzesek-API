@@ -16,6 +16,8 @@ database.once("connected", () => {
  console.log(`Database Connected ${database.host}`);
 });
 
+app.use(express.json())
+
 const morgan = require("morgan");
 app.use(morgan('dev'));
 

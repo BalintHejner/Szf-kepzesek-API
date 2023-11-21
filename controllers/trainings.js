@@ -1,3 +1,5 @@
+const  Training = require('../models/Training')
+
 // @desc   Get all trainings
 // @route  GET /api/trainings
 // @access Public
@@ -13,7 +15,6 @@ exports.getTraining = (req, res, next) => {
 }; // @desc   Create new training
 // @route  POST /api/trainings
 // @access Private
-exports.createTraining = (req, res, next) => {
   exports.createTraining = async (req, res, next) => {
     try {
       const training = await Training.create(req.body);
@@ -22,7 +23,7 @@ exports.createTraining = (req, res, next) => {
       res.status(400).json({ success: false });
     }
   };
-}; // @desc   Update training
+// @desc   Update training
 // @route  PUT /api/trainings/:id
 // @access Private
 exports.updateTraining = (req, res, next) => {

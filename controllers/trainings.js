@@ -1,4 +1,5 @@
 const Training = require("../models/Training");
+const ErrorResponse = require("../utils/errorResponse");
 
 // @desc   Get all trainings
 // @route  GET /api/trainings
@@ -24,9 +25,9 @@ exports.getTraining = async (req, res, next) => {
     }
     res.status(200).json({ success: true, data: training });
   } catch (error) {
-    next(error);
+    next(new ErrorResponse(`(${req.params.id}): Ezzel az ID-val nem létezik kurzus!`, 404));
   }
-}; // @desc   Create new training
+}; // @desc Create new training
 // @route  POST /api/trainings
 // @access Private
 exports.createTraining = async (req, res, next) => {
@@ -34,7 +35,7 @@ exports.createTraining = async (req, res, next) => {
     const training = await Training.create(req.body);
     res.status(201).json({ success: true, data: training });
   } catch (error) {
-    res.status(400).json({ success: false });
+    next(new ErrorResponse("Kérem adjon meg adatokat!", 404))
   }
 };
 // @desc   Update training
@@ -51,7 +52,12 @@ exports.updateTraining = async (req, res, next) => {
     }
     res.status(200).json({ success: true, data: training });
   } catch (error) {
-    res.status(400).json({ success: false });
+    if (!req.body) {
+      next(new ErrorResponse("Kérem adjon meg adatokat!", 404))
+    } else {
+      next(new ErrorResponse(`(${req.params.id}): Ezzel az ID-val nem létezik kurzus!`, 404))
+
+    }
   }
 }; // @desc   Delete training
 // @route  DELETE /api/trainings/:id
@@ -64,6 +70,6 @@ exports.deleteTraining = async (req, res, next) => {
     }
     res.status(200).json({ success: true, data: {} });
   } catch (error) {
-    res.status(400).json({ success: false });
+    next(new ErrorResponse(`(${req.params.id}): Ezzel az ID-val nem létezik kurzus!`, 404))
   }
 };

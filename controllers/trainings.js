@@ -18,13 +18,13 @@ exports.getTrainings = async (req, res, next) => {
 exports.getTraining = async (req, res, next) => {
   try {
     console.log(req.params.id);
-    const training = await Training.findById("5d713995b721c3bb38c1f5d0");
+    const training = await Training.findById(req.params.id);
     if (!training) {
       return res.status(400).json({ success: false, msg: "Not found" });
     }
     res.status(200).json({ success: true, data: training });
   } catch (error) {
-    res.status(400).json({ success: false });
+    next(error);
   }
 }; // @desc   Create new training
 // @route  POST /api/trainings

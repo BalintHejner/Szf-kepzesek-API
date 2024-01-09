@@ -3,7 +3,7 @@ const express = require('express')
 require('dotenv').config() // A .env fájlt olvassa
 const morgan = require('morgan')
 const fileUpload = require('express-fileupload')
-const errorHandler = require('./middleware/error')
+const errorHandler = require('./middlewares/error')
 
 const mongoose = require('mongoose')
 mongoose.set('strictQuery', true)

@@ -13,7 +13,10 @@ exports.getCourses = async (req, res, next) => {
      if (req.params.trainingId) {
      query = Course.find({ training: req.params.trainingId })
      } else {
-     query = Course.find()
+     query = Course.find().populate({
+        path: 'training',
+        select: '-_id name description'
+     })
      }
      const courses = await query
      if (courses.length === 0) {

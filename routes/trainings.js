@@ -9,7 +9,7 @@ const {
     trainingPhotoUpload,
 } = require('../controllers/trainings')
 
-const advancedResults = require('../middleware/advancedResults')
+const advancedResults = require('../middlewares/advancedResults')
 
 const courseRouter = require('./courses')
 const Training = require('../models/Training')

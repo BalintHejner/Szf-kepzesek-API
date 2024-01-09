@@ -7,12 +7,21 @@ const ErrorResponse = require('../utils/errorResponse')
 // @route  GET /api/trainings
 // @access Public
 exports.getTrainings = async (req, res, next) => {
-    try {
-        res.status(200).json(res.advancedResults)
-    } catch (error) {
-        res.status(400).json({ success: false })
-    }
-}
+     try {
+     let query;
+     let queryStr = JSON.stringify(req.query);
+     // Kicseréljük a query-ben lévő lte sztringet $lte-re
+     queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, (match) => `$${match}`);
+     query = Training.find(JSON.parse(queryStr)).populate('courses');
+     const trainings = await query;
+     res
+     .status(200)
+     .json({ success: true, count: trainings.length, data: trainings });
+     } catch (error) {
+     res.status(400).json({ success: false });
+     }
+    };
+    
 
 // @desc   Get single training
 // @route  GET /api/trainings/:id

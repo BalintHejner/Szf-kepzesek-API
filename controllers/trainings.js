@@ -117,6 +117,7 @@ exports.trainingPhotoUpload = async (req, res, next) => {
             return res.status(400).json({ success: false, msg: 'Please upload a file' })
         }
 
+        console.log(req.files)
         const file = req.files.file
         if (!file.mimetype.startsWith('image')) {
             return res.status(400).json({ success: false, msg: 'Please upload an image file' })
@@ -129,6 +130,7 @@ exports.trainingPhotoUpload = async (req, res, next) => {
         }
 
         file.name = `photo_${training.id}${path.parse(file.name).ext}`
+        console.log(file.name)
 
         file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async (err) => {
             if (err) {

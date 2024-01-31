@@ -3,6 +3,7 @@ const express = require('express')
 require('dotenv').config() // A .env fájlt olvassa
 const morgan = require('morgan')
 const fileUpload = require('express-fileupload')
+const cookieparser = require('cookie-parser')
 const errorHandler = require('./middlewares/error')
 
 const mongoose = require('mongoose')
@@ -24,6 +25,11 @@ const courses = require('./routes/courses')
 
 const app = express()
 
+
+const auth = require('./routes/auth')
+app.use("/api/auth", auth);
+
+
 app.use(express.json())
 
 app.use(morgan('dev'))
@@ -38,5 +44,7 @@ app.use(errorHandler)
 app.get('/', (req, res) => {
     res.status(400).json({ success: false })
 })
+
+app.use(cookieparser())
 
 app.listen(process.env.PORT, console.log(`Server running on port ${process.env.PORT}`))

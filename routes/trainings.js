@@ -1,4 +1,7 @@
 const express = require('express')
+const { protect, authorize } = require('../middlewares/auth')
+
+
 const {
     getTraining,
     getTrainings,
@@ -20,10 +23,10 @@ router.use('/:trainingId/courses', courseRouter)
 
 router.route('/radius/:zipcode/:distance').get(getTrainingsInRadius)
 
-router.route('/:id/photo').put(trainingPhotoUpload)
+router.route('/:id/photo').put(protect, authorize('publisher', 'admin'), trainingPhotoUpload)
 
-router.route('/').get(advancedResults(Training, 'courses'), getTrainings).post(createTraining)
+router.route('/').get(advancedResults(Training, 'courses'), getTrainings).post(protect, authorize('publisher', 'admin'), createTraining)
 
-router.route('/:id').get(getTraining).put(updateTraining).delete(deleteTraining)
+router.route('/:id').get(getTraining).put(protect, authorize('publisher', 'admin'), updateTraining).delete(protect, authorize('publisher', 'admin'), deleteTraining)
 
 module.exports = router

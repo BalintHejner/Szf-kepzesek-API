@@ -4,7 +4,7 @@ const Training = require('../models/Training')
 const ErrorResponse = require('../utils/errorResponse')
 
 // @desc   Get courses
-// @route  GET /api/courses
+// @route  GET /api/cours
 // @route  GET /api/trainings/:trainingId/courses
 // @access Public
 exports.getCourses = async (req, res, next) => {

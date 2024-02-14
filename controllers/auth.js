@@ -1,19 +1,17 @@
 const path = require("path");
 const User = require("../models/User");
 const ErrorResponse = require("../utils/errorResponse");
+
 // @desc   Register user
 // @route  POST /api/auth/register
 // @access Public
 exports.register = async (req, res, next) => {
   try {
-    const { name, email, password, role } = req.body; //Create user
-    const user = await User.create({
-      name,
-      email,
-      password,
-      role,
-    });
-    sendTokenResponse(user, 200, res);
+    const user = await User.create(req.body);
+    
+    const token = user.getSignedJwtToken();
+
+    res.status(200).json({success: true, token});
   } catch (error) {
     res.status(400).json({ success: false, msg: error.message });
   }
@@ -44,21 +42,21 @@ exports.login = async (req, res, next) => {
   }
 };
 
-const sendTokenResponse = (user, statusCode, res) => {
-  // Token létrehozása
-  const token = user.getSignedJwtToken();
-  const options = {
-    expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
-    ),
-    httpOnly: true,
-    secure: true,
-  };
-  res.status(statusCode).cookie("token", token, options).json({
-    success: true,
-    token,
-  });
-};
+// const sendTokenResponse = (user, statusCode, res) => {
+//   // Token létrehozása
+//   const token = user.getSignedJwtToken();
+//   const options = {
+//     expires: new Date(
+//       Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
+//     ),
+//     httpOnly: true,
+//     secure: true,
+//   };
+//   res.status(statusCode).cookie("token", token, options).json({
+//     success: true,
+//     token,
+//   });
+// };
 
 exports.getMe = async (req, res, next) => {
   try {

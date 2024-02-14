@@ -27,11 +27,10 @@ const app = express()
 
 
 const auth = require('./routes/auth')
-app.use("/api/auth", auth);
+
 
 
 app.use(express.json())
-
 app.use(morgan('dev'))
 
 app.use(fileUpload())
@@ -39,6 +38,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/api/trainings', trainings)
 app.use('/api/courses', courses)
+app.use('/api/auth', auth)
 
 app.use(errorHandler)
 app.get('/', (req, res) => {

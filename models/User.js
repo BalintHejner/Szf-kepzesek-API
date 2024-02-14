@@ -49,11 +49,11 @@ UserSchema.methods.getSignedJwtToken = function () {
      })
 }    
 
-// A felhasználó által megadott jelszó és 
-// az adatbázisban tárolt hashelt jelszó összehasonlítása
-UserSchema.methods.matchPassword = async function (enteredPassword) {
-     return await bcrypt.compare(enteredPassword, this.password)
-    }
+// // A felhasználó által megadott jelszó és 
+// // az adatbázisban tárolt hashelt jelszó összehasonlítása
+// UserSchema.methods.matchPassword = async function (enteredPassword) {
+//      return await bcrypt.compare(enteredPassword, this.password)
+//     }
     
 
-module.exports = mongoose.model("User", UserSchema);
+module.exports = mongoose.model("User", UserSchema, "users");

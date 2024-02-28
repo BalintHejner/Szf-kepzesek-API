@@ -52,6 +52,17 @@ exports.getTraining = async (req, res, next) => {
 // @access Private
 exports.createTraining = async (req, res, next) => {
   try {
+    // A user mező hozzáadása a kérés törzséhez
+    req.body.user = req.user.id; // Annak ellenőrzése, hogy az adott felhasználónak van-e publikált képzése
+    const publishedTraining = await Training.findOne({ user: req.user.id }); // Ha az adott felhasználó nem admin, akkor csak egy képzést hozhat létre
+    if (publishedTraining && req.user.role !== "admin") {
+      return next(
+        new ErrorResponse(
+          `A (${req.user.id}) id-vel regisztrált user-nek már van publikált képzése `,
+          400
+        )
+      );
+    }
     const training = await Training.create(req.body);
     res.status(201).json({ success: true, data: training });
   } catch (error) {
@@ -64,13 +75,19 @@ exports.createTraining = async (req, res, next) => {
 // @access Private
 exports.updateTraining = async (req, res, next) => {
   try {
-    const training = await Training.findByIdAndUpdate(req.params.id, req.body, {
-      new: true, // A frissített adatokat kapjuk vissza
-      runValidators: true, // Ellenőrizze a frissített adatokat a modell
-    });
+    let training = await Training.findById(req.params.id);
     if (!training) {
       return res.status(400).json({ success: false, msg: "Not found" });
+    } // Ellenőrzés, hogy az aktuális user a tulajdonosa a frissítendő képzésnek
+    if (training.user.toString() !== req.user.id && req.user.role !== "admin") {
+      return next(
+        new ErrorResponse("A képzést csak a létrehozója frissítheti!", 401)
+      );
     }
+    training = await Training.findOneAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
     res.status(200).json({ success: true, data: training });
   } catch (error) {
     res.status(400).json({ success: false });

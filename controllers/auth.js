@@ -1,6 +1,16 @@
 const path = require("path");
 const User = require("../models/User");
 const ErrorResponse = require("../utils/errorResponse"); // @desc   Register user
+const nodemailer = require("nodemailer");
+
+const transport = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
+  }
+});
 
 // @route  POST /api/auth/register
 // @access Public
@@ -61,4 +71,51 @@ const sendTokenResponse = (user, statusCode, res) => {
     success: true,
     token,
   });
+};
+
+// @desc   Elfelejtett jelszó
+// @route  POST /api/auth/forgotpassword
+// @access Public
+exports.forgotPassword = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      return next(new ErrorResponse("There is no user that email", 404));
+    } // A reset token megszerzése
+    const resetToken = user.getResetPasswordToken();
+    console.log(resetToken);
+    await user.save({ validateBeforeSave: false});
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
+
+    transport.sendMail({
+      from: 'no-reply@no-reply.com',
+      to: user.email,
+      subject: 'Elfelejtett jelszó',
+      text : `${resetToken}`,
+      html: `<b>${resetToken}</b>`
+    }).then(() => console.log('email sent'))
+    .catch((err) => console.log(err));
+
+
+  } catch (error) {
+    res.status(400).json({ success: false, msg: error.message });
+  }
+};
+
+// @desc   A bejelentkezett felhasználó megszerzése
+// @route  POST /api/auth/me
+// @access Private
+exports.getMe = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
+    res.status(400).json({ success: false, msg: error.message });
+  }
 };

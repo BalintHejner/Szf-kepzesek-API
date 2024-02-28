@@ -28,10 +28,15 @@ const CourseSchema = new mongoose.Schema({
         ref: 'Training',
         required: true
     },
+    user: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+        required: true
+    },
     createdAt: {
         type: Date,
         default: Date.now
-    },
+    }
 })
 
 // Statikus metódus az adott képzéshez tartozó kurzusok átlagos költségének kiszámítására

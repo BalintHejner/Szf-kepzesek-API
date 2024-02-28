@@ -1,32 +1,38 @@
-const express = require('express')
-const { protect, authorize } = require('../middlewares/auth')
-
-
+const express = require("express");
 const {
-    getTraining,
-    getTrainings,
-    createTraining,
-    updateTraining,
-    deleteTraining,
-    getTrainingsInRadius,
-    trainingPhotoUpload,
-} = require('../controllers/trainings')
+  getTraining,
+  getTrainings,
+  createTraining,
+  updateTraining,
+  deleteTraining,
+  getTrainingsInRadius,
+  trainingPhotoUpload,
+} = require("../controllers/trainings");
 
-const advancedResults = require('../middlewares/advancedResults')
+const advancedResults = require("../middleware/advancedResults");
 
-const courseRouter = require('./courses')
-const Training = require('../models/Training')
+const courseRouter = require("./courses");
+const Training = require("../models/Training");
 
-const router = express.Router()
+const router = express.Router();
 
-router.use('/:trainingId/courses', courseRouter)
+const { protect } = require("../middleware/auth");
 
-router.route('/radius/:zipcode/:distance').get(getTrainingsInRadius)
+router.use("/:trainingId/courses", courseRouter);
 
-router.route('/:id/photo').put(protect, authorize('publisher', 'admin'), trainingPhotoUpload)
+router.route("/radius/:zipcode/:distance").get(getTrainingsInRadius);
 
-router.route('/').get(advancedResults(Training, 'courses'), getTrainings).post(protect, authorize('publisher', 'admin'), createTraining)
+router.route("/:id/photo").put(protect, trainingPhotoUpload);
 
-router.route('/:id').get(getTraining).put(protect, authorize('publisher', 'admin'), updateTraining).delete(protect, authorize('publisher', 'admin'), deleteTraining)
+router
+  .route("/")
+  .get(advancedResults(Training, "courses"), getTrainings)
+  .post(protect, createTraining);
 
-module.exports = router
+router
+  .route("/:id")
+  .get(getTraining)
+  .put(protect, updateTraining)
+  .delete(protect, deleteTraining);
+
+module.exports = router;

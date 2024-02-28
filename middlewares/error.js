@@ -1,6 +1,6 @@
 const ErrorResponse = require('../utils/errorResponse')
 const errorHandler = (err, req, res, next) => {
-    console.log(err.stack)
+    console.log(err.stack);
 
     // Mongoose duplicate key
     if (err.code === 11000) {
@@ -10,7 +10,7 @@ const errorHandler = (err, req, res, next) => {
 
     res.status(err.statusCode || 500).json({
         success: false,
-        error: err.message || 'Server Error',
+        error: err.message || 'Server Error'
     })
 }
 

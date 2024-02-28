@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken");
 const ErrorResponse = require("../utils/errorResponse");
-const User = require("../models/User"); // Útvonalak védelme
+const User = require("../models/User"); 
+
+// Útvonalak védelme
 exports.protect = async (req, res, next) => {
   try {
     let token;
@@ -22,18 +24,4 @@ exports.protect = async (req, res, next) => {
   } catch (error) {
     res.status(400).json({ success: false, msg: error.message });
   }
-};
-
-exports.authorize = (...roles) => {
-  return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      return next(
-        new ErrorResponse(
-          `A ${req.user.role} szerepköröd nem elégséges ehhez a művelethez`,
-          403
-        )
-      );
-    }
-    next();
-  };
 };

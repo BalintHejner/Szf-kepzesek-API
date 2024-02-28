@@ -1,27 +1,26 @@
 {
-  "name": "szf-kepzesek-api",
+  "name": "szoftver_fejleszto_kurzusok_api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Szoftver fejlesztő kurzusokat kiszolgáló back-end API",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "nodemon server"
   },
-  "author": "",
+  "author": "Soós Gábor",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
-    "dotenv": "^16.3.1",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "express-fileupload": "^1.4.3",
+    "express-fileupload": "^1.4.0",
     "jsonwebtoken": "^9.0.2",
-    "mongodb": "^6.3.0",
-    "mongoose": "^8.0.1",
+    "mongoose": "^6.8.3",
     "morgan": "^1.10.0",
     "node-geocoder": "^4.2.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "nodemon": "^2.0.20"
   }
 }
